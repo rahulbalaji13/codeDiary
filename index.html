@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coding Diary Tracker</title>
+    <style>
+        :root {
+            --color-cream-50: rgba(252, 252, 249, 1);
+            --color-cream-100: rgba(255, 255, 253, 1);
+            --color-gray-200: rgba(245, 245, 245, 1);
+            --color-gray-300: rgba(167, 169, 169, 1);
+            --color-gray-400: rgba(119, 124, 124, 1);
+            --color-slate-500: rgba(98, 108, 113, 1);
+            --color-brown-600: rgba(94, 82, 64, 1);
+            --color-charcoal-700: rgba(31, 33, 33, 1);
+            --color-charcoal-800: rgba(38, 40, 40, 1);
+            --color-slate-900: rgba(19, 52, 59, 1);
+            --color-teal-300: rgba(50, 184, 198, 1);
+            --color-teal-500: rgba(33, 128, 141, 1);
+            --color-teal-600: rgba(29, 116, 128, 1);
+            --color-teal-700: rgba(26, 104, 115, 1);
+            --color-red-400: rgba(255, 84, 89, 1);
+            --color-red-500: rgba(192, 21, 47, 1);
+            --color-orange-400: rgba(230, 129, 97, 1);
+            --color-orange-500: rgba(168, 75, 47, 1);
+            --color-brown-600-rgb: 94, 82, 64;
+            --color-teal-500-rgb: 33, 128, 141;
+            --color-slate-900-rgb: 19, 52, 59;
+            --color-slate-500-rgb: 98, 108, 113;
+            --color-background: var(--color-cream-50);
+            --color-surface: var(--color-cream-100);
+            --color-text: var(--color-slate-900);
+            --color-text-secondary: var(--color-slate-500);
+            --color-primary: var(--color-teal-500);
+            --color-primary-hover: var(--color-teal-600);
+            --color-primary-active: var(--color-teal-700);
+            --color-secondary: rgba(var(--color-brown-600-rgb), 0.12);
+            --color-secondary-hover: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-border: rgba(var(--color-brown-600-rgb), 0.2);
+            --color-btn-primary-text: var(--color-cream-50);
+            --color-card-border: rgba(var(--color-brown-600-rgb), 0.12);
+            --color-success: var(--color-teal-500);
+            --color-error: var(--color-red-500);
+            --color-warning: var(--color-orange-500);
+            --font-family-base: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.04), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+            --radius-base: 8px;
+            --radius-lg: 12px;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --color-gray-400-rgb: 119, 124, 124;
+                --color-teal-300-rgb: 50, 184, 198;
+                --color-gray-300-rgb: 167, 169, 169;
+                --color-gray-200-rgb: 245, 245, 245;
+                --color-background: var(--color-charcoal-700);
+                --color-surface: var(--color-charcoal-800);
+                --color-text: var(--color-gray-200);
+                --color-text-secondary: rgba(var(--color-gray-300-rgb), 0.7);
+                --color-primary: var(--color-teal-300);
+                --color-secondary: rgba(var(--color-gray-400-rgb), 0.15);
+                --color-secondary-hover: rgba(var(--color-gray-400-rgb), 0.25);
+                --color-border: rgba(var(--color-gray-400-rgb), 0.3);
+                --color-card-border: rgba(var(--color-gray-400-rgb), 0.2);
+                --color-error: var(--color-red-400);
+                --color-warning: var(--color-orange-400);
+                --color-btn-primary-text: var(--color-slate-900);
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--color-background);
+            color: var(--color-text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: var(--color-surface);
+            padding: 24px;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 32px;
+            border: 1px solid var(--color-card-border);
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--color-text);
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: var(--color-text-secondary);
+            font-size: 14px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: var(--color-surface);
+            padding: 20px;
+            border-radius: var(--radius-base);
+            border: 1px solid var(--color-card-border);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--color-text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 24px;
+        }
+
+        .form-section {
+            background: var(--color-surface);
+            padding: 24px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-card-border);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 24px;
+        }
+
+        h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--color-text);
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--color-text);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--color-border);
+            border-radius: var(--radius-base);
+            font-size: 14px;
+            background: var(--color-surface);
+            color: var(--color-text);
+            font-family: var(--font-family-base);
+            transition: border-color 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: 2px solid var(--color-primary);
+            border-color: var(--color-primary);
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--radius-base);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: var(--color-btn-primary-text);
+        }
+
+        .btn-primary:hover {
+            background: var(--color-primary-hover);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--color-secondary);
+            color: var(--color-text);
+            margin-left: 8px;
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-secondary-hover);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+
+        .problems-list {
+            background: var(--color-surface);
+            padding: 24px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-card-border);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .filter-section {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-section select {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .problem-item {
+            background: var(--color-background);
+            border: 1px solid var(--color-card-border);
+            border-radius: var(--radius-base);
+            padding: 16px;
+            margin-bottom: 12px;
+            transition: box-shadow 0.2s;
+        }
+
+        .problem-item:hover {
+            box-shadow: var(--shadow-md);
+        }
+
+        .problem-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 8px;
+        }
+
+        .problem-title {
+            font-weight: 600;
+            font-size: 16px;
+            color: var(--color-text);
+            flex: 1;
+        }
+
+        .problem-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-right: 6px;
+            margin-bottom: 6px;
+        }
+
+        .tag-easy {
+            background: rgba(var(--color-teal-500-rgb), 0.15);
+            color: var(--color-success);
+        }
+
+        .tag-medium {
+            background: rgba(168, 75, 47, 0.15);
+            color: var(--color-warning);
+        }
+
+        .tag-hard {
+            background: rgba(192, 21, 47, 0.15);
+            color: var(--color-error);
+        }
+
+        .tag-platform {
+            background: var(--color-secondary);
+            color: var(--color-text-secondary);
+        }
+
+        .problem-meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 8px;
+            font-size: 13px;
+            color: var(--color-text-secondary);
+        }
+
+        .problem-notes {
+            margin-top: 8px;
+            padding: 8px;
+            background: var(--color-secondary);
+            border-radius: 6px;
+            font-size: 13px;
+            color: var(--color-text-secondary);
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+
+        .insights-card {
+            background: var(--color-surface);
+            padding: 20px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--color-card-border);
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 16px;
+        }
+
+        .insights-card h3 {
+            font-size: 16px;
+            margin-bottom: 16px;
+            color: var(--color-text);
+        }
+
+        .insight-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .insight-label {
+            color: var(--color-text-secondary);
+        }
+
+        .insight-value {
+            font-weight: 600;
+            color: var(--color-text);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--color-secondary);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--color-primary);
+            transition: width 0.3s;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--color-text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .filter-section {
+                flex-direction: column;
+            }
+
+            .filter-section select {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🚀 Coding Diary Tracker</h1>
+            <p class="subtitle">Track your DSA journey and competitive programming progress</p>
+        </header>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-label">Total Problems</div>
+                <div class="stat-value" id="totalProblems">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">This Week</div>
+                <div class="stat-value" id="weekProblems">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Current Streak</div>
+                <div class="stat-value" id="currentStreak">0 days</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Success Rate</div>
+                <div class="stat-value" id="successRate">0%</div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div>
+                <div class="form-section">
+                    <h2>Add New Problem</h2>
+                    <form id="problemForm">
+                        <div class="form-group">
+                            <label for="problemName">Problem Name *</label>
+                            <input type="text" id="problemName" required placeholder="e.g., Two Sum, Longest Substring">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="platform">Platform *</label>
+                            <select id="platform" required>
+                                <option value="">Select Platform</option>
+                                <option value="LeetCode">LeetCode</option>
+                                <option value="Codeforces">Codeforces</option>
+                                <option value="CodeChef">CodeChef</option>
+                                <option value="HackerRank">HackerRank</option>
+                                <option value="GeeksforGeeks">GeeksforGeeks</option>
+                                <option value="AtCoder">AtCoder</option>
+                                <option value="SPOJ">SPOJ</option>
+                                <option value="InterviewBit">InterviewBit</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="difficulty">Difficulty *</label>
+                            <select id="difficulty" required>
+                                <option value="">Select Difficulty</option>
+                                <option value="Easy">Easy</option>
+                                <option value="Medium">Medium</option>
+                                <option value="Hard">Hard</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="topic">Topic/Category</label>
+                            <select id="topic">
+                                <option value="">Select Topic</option>
+                                <option value="Array">Array</option>
+                                <option value="String">String</option>
+                                <option value="Hash Table">Hash Table</option>
+                                <option value="Dynamic Programming">Dynamic Programming</option>
+                                <option value="Trees">Trees</option>
+                                <option value="Graph">Graph</option>
+                                <option value="Backtracking">Backtracking</option>
+                                <option value="Greedy">Greedy</option>
+                                <option value="Stack">Stack</option>
+                                <option value="Queue">Queue</option>
+                                <option value="Linked List">Linked List</option>
+                                <option value="Binary Search">Binary Search</option>
+                                <option value="Two Pointers">Two Pointers</option>
+                                <option value="Sliding Window">Sliding Window</option>
+                                <option value="Heap">Heap</option>
+                                <option value="Trie">Trie</option>
+                                <option value="Bit Manipulation">Bit Manipulation</option>
+                                <option value="Math">Math</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="status">Status *</label>
+                            <select id="status" required>
+                                <option value="Solved">✅ Solved</option>
+                                <option value="Attempted">⚠️ Attempted</option>
+                                <option value="Revisit">🔄 Need to Revisit</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="timeTaken">Time Taken (minutes)</label>
+                            <input type="number" id="timeTaken" min="0" placeholder="e.g., 45">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="problemUrl">Problem URL</label>
+                            <input type="url" id="problemUrl" placeholder="https://leetcode.com/problems/...">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="notes">Notes / Approach</label>
+                            <textarea id="notes" placeholder="Key insights, approach used, patterns recognized..."></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Add Problem</button>
+                        <button type="reset" class="btn btn-secondary">Clear</button>
+                    </form>
+                </div>
+
+                <div class="problems-list">
+                    <h2>Problem History</h2>
+                    
+                    <div class="filter-section">
+                        <select id="filterDifficulty">
+                            <option value="">All Difficulties</option>
+                            <option value="Easy">Easy</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Hard">Hard</option>
+                        </select>
+                        <select id="filterPlatform">
+                            <option value="">All Platforms</option>
+                            <option value="LeetCode">LeetCode</option>
+                            <option value="Codeforces">Codeforces</option>
+                            <option value="CodeChef">CodeChef</option>
+                            <option value="HackerRank">HackerRank</option>
+                            <option value="GeeksforGeeks">GeeksforGeeks</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <select id="filterTopic">
+                            <option value="">All Topics</option>
+                            <option value="Array">Array</option>
+                            <option value="String">String</option>
+                            <option value="Dynamic Programming">Dynamic Programming</option>
+                            <option value="Trees">Trees</option>
+                            <option value="Graph">Graph</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+
+                    <div id="problemsList"></div>
+                </div>
+            </div>
+
+            <aside class="sidebar">
+                <div class="insights-card">
+                    <h3>📊 Insights</h3>
+                    <div class="insight-row">
+                        <span class="insight-label">Easy</span>
+                        <span class="insight-value" id="easyCount">0</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="easyProgress" style="width: 0%"></div>
+                    </div>
+                    
+                    <div class="insight-row" style="margin-top: 16px;">
+                        <span class="insight-label">Medium</span>
+                        <span class="insight-value" id="mediumCount">0</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="mediumProgress" style="width: 0%"></div>
+                    </div>
+                    
+                    <div class="insight-row" style="margin-top: 16px;">
+                        <span class="insight-label">Hard</span>
+                        <span class="insight-value" id="hardCount">0</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="hardProgress" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div class="insights-card">
+                    <h3>🎯 Top Topics</h3>
+                    <div id="topTopics"></div>
+                </div>
+
+                <div class="insights-card">
+                    <h3>💡 Quick Stats</h3>
+                    <div class="insight-row">
+                        <span class="insight-label">Avg Time</span>
+                        <span class="insight-value" id="avgTime">-</span>
+                    </div>
+                    <div class="insight-row">
+                        <span class="insight-label">Longest Streak</span>
+                        <span class="insight-value" id="longestStreak">0 days</span>
+                    </div>
+                    <div class="insight-row">
+                        <span class="insight-label">Last Solved</span>
+                        <span class="insight-value" id="lastSolved">-</span>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <script>
+        let problems = JSON.parse(localStorage.getItem('codingProblems')) || [];
+
+        function saveProblem(problem) {
+            problems.unshift(problem);
+            localStorage.setItem('codingProblems', JSON.stringify(problems));
+            updateUI();
+        }
+
+        function deleteProblem(id) {
+            if (confirm('Are you sure you want to delete this problem?')) {
+                problems = problems.filter(p => p.id !== id);
+                localStorage.setItem('codingProblems', JSON.stringify(problems));
+                updateUI();
+            }
+        }
+
+        function updateUI() {
+            updateStats();
+            updateInsights();
+            displayProblems();
+        }
+
+        function updateStats() {
+            const total = problems.length;
+            document.getElementById('totalProblems').textContent = total;
+
+            const oneWeekAgo = new Date();
+            oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+            const weekCount = problems.filter(p => new Date(p.date) >= oneWeekAgo).length;
+            document.getElementById('weekProblems').textContent = weekCount;
+
+            const solvedCount = problems.filter(p => p.status === 'Solved').length;
+            const successRate = total > 0 ? Math.round((solvedCount / total) * 100) : 0;
+            document.getElementById('successRate').textContent = successRate + '%';
+
+            const streak = calculateStreak();
+            document.getElementById('currentStreak').textContent = streak + ' days';
+            document.getElementById('longestStreak').textContent = calculateLongestStreak() + ' days';
+
+            if (problems.length > 0) {
+                const lastDate = new Date(problems[0].date);
+                const today = new Date();
+                const diffDays = Math.floor((today - lastDate) / (1000 * 60 * 60 * 24));
+                if (diffDays === 0) {
+                    document.getElementById('lastSolved').textContent = 'Today';
+                } else if (diffDays === 1) {
+                    document.getElementById('lastSolved').textContent = 'Yesterday';
+                } else {
+                    document.getElementById('lastSolved').textContent = diffDays + ' days ago';
+                }
+            } else {
+                document.getElementById('lastSolved').textContent = '-';
+            }
+
+            const timeTaken = problems.filter(p => p.timeTaken > 0).map(p => p.timeTaken);
+            if (timeTaken.length > 0) {
+                const avgTime = Math.round(timeTaken.reduce((a, b) => a + b, 0) / timeTaken.length);
+                document.getElementById('avgTime').textContent = avgTime + ' min';
+            } else {
+                document.getElementById('avgTime').textContent = '-';
+            }
+        }
+
+        function calculateStreak() {
+            if (problems.length === 0) return 0;
+
+            const dates = [...new Set(problems.map(p => p.date.split('T')[0]))].sort().reverse();
+            let streak = 0;
+            const today = new Date().toISOString().split('T')[0];
+            let currentDate = new Date(today);
+
+            for (let i = 0; i < dates.length; i++) {
+                const dateStr = currentDate.toISOString().split('T')[0];
+                if (dates.includes(dateStr)) {
+                    streak++;
+                    currentDate.setDate(currentDate.getDate() - 1);
+                } else if (i === 0 && dateStr !== today) {
+                    break;
+                } else {
+                    break;
+                }
+            }
+
+            return streak;
+        }
+
+        function calculateLongestStreak() {
+            if (problems.length === 0) return 0;
+
+            const dates = [...new Set(problems.map(p => p.date.split('T')[0]))].sort();
+            let maxStreak = 1;
+            let currentStreak = 1;
+
+            for (let i = 1; i < dates.length; i++) {
+                const prevDate = new Date(dates[i - 1]);
+                const currDate = new Date(dates[i]);
+                const diffDays = Math.floor((currDate - prevDate) / (1000 * 60 * 60 * 24));
+
+                if (diffDays === 1) {
+                    currentStreak++;
+                    maxStreak = Math.max(maxStreak, currentStreak);
+                } else {
+                    currentStreak = 1;
+                }
+            }
+
+            return maxStreak;
+        }
+
+        function updateInsights() {
+            const easy = problems.filter(p => p.difficulty === 'Easy').length;
+            const medium = problems.filter(p => p.difficulty === 'Medium').length;
+            const hard = problems.filter(p => p.difficulty === 'Hard').length;
+            const total = problems.length || 1;
+
+            document.getElementById('easyCount').textContent = easy;
+            document.getElementById('mediumCount').textContent = medium;
+            document.getElementById('hardCount').textContent = hard;
+
+            document.getElementById('easyProgress').style.width = (easy / total * 100) + '%';
+            document.getElementById('mediumProgress').style.width = (medium / total * 100) + '%';
+            document.getElementById('hardProgress').style.width = (hard / total * 100) + '%';
+
+            const topicCounts = {};
+            problems.forEach(p => {
+                if (p.topic) {
+                    topicCounts[p.topic] = (topicCounts[p.topic] || 0) + 1;
+                }
+            });
+
+            const sortedTopics = Object.entries(topicCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+
+            const topTopicsDiv = document.getElementById('topTopics');
+            if (sortedTopics.length > 0) {
+                topTopicsDiv.innerHTML = sortedTopics.map(([topic, count]) => `
+                    <div class="insight-row">
+                        <span class="insight-label">${topic}</span>
+                        <span class="insight-value">${count}</span>
+                    </div>
+                `).join('');
+            } else {
+                topTopicsDiv.innerHTML = '<div style="color: var(--color-text-secondary); font-size: 13px;">No topics yet</div>';
+            }
+        }
+
+        function displayProblems() {
+            const filterDifficulty = document.getElementById('filterDifficulty').value;
+            const filterPlatform = document.getElementById('filterPlatform').value;
+            const filterTopic = document.getElementById('filterTopic').value;
+
+            let filtered = problems;
+
+            if (filterDifficulty) {
+                filtered = filtered.filter(p => p.difficulty === filterDifficulty);
+            }
+            if (filterPlatform) {
+                filtered = filtered.filter(p => p.platform === filterPlatform);
+            }
+            if (filterTopic) {
+                filtered = filtered.filter(p => p.topic === filterTopic);
+            }
+
+            const listDiv = document.getElementById('problemsList');
+
+            if (filtered.length === 0) {
+                listDiv.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📝</div>
+                        <div>No problems found. Start adding your coding journey!</div>
+                    </div>
+                `;
+                return;
+            }
+
+            listDiv.innerHTML = filtered.map(problem => {
+                const date = new Date(problem.date);
+                const formattedDate = date.toLocaleDateString('en-IN', { 
+                    day: 'numeric', 
+                    month: 'short', 
+                    year: 'numeric' 
+                });
+                const formattedTime = date.toLocaleTimeString('en-IN', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                });
+
+                const statusEmoji = {
+                    'Solved': '✅',
+                    'Attempted': '⚠️',
+                    'Revisit': '🔄'
+                };
+
+                return `
+                    <div class="problem-item">
+                        <div class="problem-header">
+                            <div style="flex: 1;">
+                                <div class="problem-title">
+                                    ${statusEmoji[problem.status]} ${problem.name}
+                                </div>
+                                <div style="margin-top: 6px;">
+                                    <span class="tag tag-${problem.difficulty.toLowerCase()}">${problem.difficulty}</span>
+                                    <span class="tag tag-platform">${problem.platform}</span>
+                                    ${problem.topic ? `<span class="tag tag-platform">${problem.topic}</span>` : ''}
+                                </div>
+                            </div>
+                            <div class="problem-actions">
+                                ${problem.url ? `<a href="${problem.url}" target="_blank" class="btn btn-secondary btn-sm">View</a>` : ''}
+                                <button onclick="deleteProblem('${problem.id}')" class="btn btn-secondary btn-sm">Delete</button>
+                            </div>
+                        </div>
+                        
+                        <div class="problem-meta">
+                            <span>📅 ${formattedDate}</span>
+                            <span>🕐 ${formattedTime}</span>
+                            ${problem.timeTaken ? `<span>⏱️ ${problem.timeTaken} min</span>` : ''}
+                        </div>
+                        
+                        ${problem.notes ? `<div class="problem-notes">${problem.notes}</div>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        document.getElementById('problemForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const problem = {
+                id: Date.now().toString(),
+                name: document.getElementById('problemName').value,
+                platform: document.getElementById('platform').value,
+                difficulty: document.getElementById('difficulty').value,
+                topic: document.getElementById('topic').value,
+                status: document.getElementById('status').value,
+                timeTaken: parseInt(document.getElementById('timeTaken').value) || 0,
+                url: document.getElementById('problemUrl').value,
+                notes: document.getElementById('notes').value,
+                date: new Date().toISOString()
+            };
+
+            saveProblem(problem);
+            this.reset();
+            
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        });
+
+        document.getElementById('filterDifficulty').addEventListener('change', displayProblems);
+        document.getElementById('filterPlatform').addEventListener('change', displayProblems);
+        document.getElementById('filterTopic').addEventListener('change', displayProblems);
+
+        updateUI();
+    </script>
+</body>
+</html>
